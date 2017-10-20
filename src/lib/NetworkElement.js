@@ -1,29 +1,8 @@
-class Component{
-    constructor(id=null){
-        this.id = id;
-        this.member = [];
-        this.children = [];
-        Object.setPrototypeOf({setNetworkData: this.setNetworkData}, this);
-    }
-
-    setNetworkData(node){
-        if(this.networkNodes)
-            node.networkNodes.push(...this.networkNodes);
-        this.networkNodes = node.networkNodes;
-        this.networkEdges = node.networkEdges;
-
-        this.setNetworkData = (node) => {
-            node.networkNodes = this.networkNodes.push(...node.networkNodes);
-            node.networkEdges = this.networkEdges.push(...node.networkEdges);
-        };
-    }
-}
+import { Component } from './NetworkComponent';
 
 export class NetworkLine extends Component{
     constructor(attr){
-        super(attr.id);
-        this.attr = attr;
-
+        super(attr);
         for(let n of attr.member){
             let node = 'ring' == n.type ? 
                 new NetworkRing(n) : 'line' == n.type ?
@@ -39,9 +18,7 @@ export class NetworkLine extends Component{
 
 export class NetworkRing extends Component{
     constructor(attr){
-        super(attr.id);
-        
-        this.attr = attr;
+        super(attr);
         for(let n of attr.member){
             let node = 'ring' == n.type ? 
                 new NetworkRing(n) : 'line' == n.type ?
@@ -62,10 +39,10 @@ export class NetworkRing extends Component{
 
 export default class NetworkNode extends Component{
     constructor(attr){
-        super(attr.id);
-        
-        this.attr = attr;
-        this.networkNodes = [Object.assign(attr, {label: attr.id})];
+        super(attr);
+        if(! this.attr.label)
+            this.attr.label = this.attr.id;
+        this.networkNodes = [this.attr];
         this.networkEdges = [];
         
         if(attr.children && attr.children.length > 0){
@@ -83,9 +60,6 @@ export default class NetworkNode extends Component{
                 else
                     this.networkEdges.push({from: this.id, to: n.id});
             }
-            
         }
-        
     }
-
 }

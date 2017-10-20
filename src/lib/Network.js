@@ -1,4 +1,7 @@
-import { NetworkLine, NetworkRing, NetworkNode } from './NetworkElement';
+import { 
+    NetworkLine as Line, 
+    NetworkRing as Ring, 
+    NetworkNode as Node } from './NetworkElement';
 
 export class Network{
     constructor(entry=null){
@@ -6,7 +9,7 @@ export class Network{
     }
 }
 
-const ParseNetwork = (network) => {
+const ParseNetwork = (network=[], settings={}) => {
     if(!(network instanceof Array))
         network = [network];
     
@@ -14,11 +17,11 @@ const ParseNetwork = (network) => {
     for(let root of network){
         switch(root.type){
             case 'single':
-                return new NetworkNode(root);
+                return new Node(root);
             case 'ring':
-                return new NetworkRing(root);
+                return new Ring(root);
             case 'line':
-                return new NetworkLine(root);
+                return new Line(root);
             default:
                 console.error('Missing or wrong node type');
                 return;

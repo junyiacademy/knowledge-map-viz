@@ -8,30 +8,41 @@ import { ParseNetwork } from '../lib/Network';
 
 class App extends Component{
     render(){
-        return <div ref={ graph => {this.graphCanvas = graph} }></div>;
+        return (
+            <div 
+                ref={ graph => {this.graphCanvas = graph} }
+                style={{height: '100vh'}}
+                ></div>
+        )
     }
 
     componentDidMount(){
         
         console.log(this.props.network);
-        let { roots } = this.props.network;
+        let { roots, settings } = this.props.network;
 
-        let d = ParseNetwork(roots);
+        let d = ParseNetwork(roots, settings);
+        console.log(d);
         let nodes = new vis.DataSet(d.networkNodes);
         let edges = new vis.DataSet(d.networkEdges);
 
         // create a network
-        var container = this.graphCanvas;
+        let container = this.graphCanvas;
 
         // provide the data in the vis format
-        var data = {
+        let data = {
             nodes: nodes,
             edges: edges
         };
-        var options = {};
+        let options = settings;
 
         // initialize your network!
-        var network = new vis.Network(container, data, options);
+        let network = new vis.Network(container, data, options);
+        window.network = network;
+
+        network.on('click', (e) => {
+            console.log(e);
+        });
     }
 }
 
