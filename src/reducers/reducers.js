@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { TEXT } from '../actions/actions';
 
-function changeText(state = false, action){
+function changeText(state = false, action = false) {
     switch(action.type){
         case TEXT:
             return !state;
